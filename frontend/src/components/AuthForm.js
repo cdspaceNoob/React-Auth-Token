@@ -1,9 +1,12 @@
 import { Fragment } from "react";
-import { Form, Link, useSearchParams } from "react-router-dom";
+import { Form, Link, useSearchParams, useActionData } from "react-router-dom";
 
 import classes from "./AuthForm.module.css";
 
 const AuthForm = () => {
+  const actionData = useActionData();
+  console.log(actionData.errors);
+
   const [searchParams] = useSearchParams();
   const isLogin = searchParams.get("mode") === "login";
 
@@ -11,6 +14,14 @@ const AuthForm = () => {
     <Fragment>
       <Form method="post" className={classes.form}>
         <h1>{isLogin ? "Log in" : "Create a new user"}</h1>
+        {actionData?.errors && (
+          <ul>
+            {Object.values(actionData.errors).map((err) => (
+              <li key={err}>{err}</li>
+            ))}
+          </ul>
+        )}
+        {actionData?.message && <p>{actionData.message}</p>}
         <p>
           <label htmlFor="email">Email</label>
           <input id="email" type="email" name="email" required />
