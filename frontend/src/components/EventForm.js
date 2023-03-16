@@ -3,10 +3,11 @@ import {
   useNavigate,
   useNavigation,
   useActionData,
+  useRouteLoaderData,
   json,
   redirect,
 } from "react-router-dom";
-import { getAuthToken } from "../util/auth";
+// import { getAuthToken } from "../util/auth";
 
 import classes from "./EventForm.module.css";
 
@@ -88,7 +89,7 @@ export const action = async ({ request, params }) => {
   const method = request.method;
   const data = await request.formData();
 
-  const token = getAuthToken();
+  const token = useRouteLoaderData("root");
 
   const eventData = {
     title: data.get("title"),
