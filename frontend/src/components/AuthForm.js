@@ -1,14 +1,22 @@
 import { Fragment } from "react";
-import { Form, Link, useSearchParams, useActionData } from "react-router-dom";
+import {
+  Form,
+  Link,
+  useSearchParams,
+  useActionData,
+  useNavigation,
+} from "react-router-dom";
 
 import classes from "./AuthForm.module.css";
 
 const AuthForm = () => {
   const actionData = useActionData();
-  console.log(actionData.errors);
+
+  const navigation = useNavigation();
 
   const [searchParams] = useSearchParams();
   const isLogin = searchParams.get("mode") === "login";
+  const isSubmitting = navigation.state === "submitting";
 
   return (
     <Fragment>
@@ -34,7 +42,9 @@ const AuthForm = () => {
           <Link to={`?mode=${isLogin ? "signup" : "login"}`}>
             {isLogin ? "Login" : "create new user"}
           </Link>
-          <button>Save</button>
+          <button disabled={isSubmitting}>
+            {isSubmitting ? "submitting" : "save"}
+          </button>
         </div>
       </Form>
     </Fragment>
