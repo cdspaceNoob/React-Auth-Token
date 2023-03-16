@@ -8,7 +8,6 @@ const AuthenticationPage = () => {
 export default AuthenticationPage;
 
 export const action = async ({ request }) => {
-  // URL은 브라우저 built-in이다.
   const searchParams = new URL(request.url).searchParams;
   const mode = searchParams.get("mode") || "login";
 
@@ -18,7 +17,6 @@ export const action = async ({ request }) => {
 
   const data = await request.formData();
   const authData = {
-    // 여기서 get 메소드는 formData의 반환값(데이터)에 들어있다.
     email: data.get("email"),
     password: data.get("password"),
   };
@@ -32,14 +30,17 @@ export const action = async ({ request }) => {
   });
 
   if (response.status === 422 || response.status === 401) {
-    return response; // 이렇게만 해줘도 ReactRouter가 알아서 데이터를 추출한다.
+    return response;
   }
 
   if (!response.ok) {
     throw json({ message: "could not authenticate user" }, { status: 500 });
   }
 
-  // token
+  const resultData = await response.json();
+  const token = resultData.token;
+
+  localStorage.setItem("token", token);
 
   return redirect("/");
 };
